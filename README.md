@@ -1,97 +1,93 @@
-# Jenkins Java Maven App
 
-This repository contains a simple Java application built with Maven, designed to demonstrate continuous integration (CI) and continuous deployment (CD) workflows using Jenkins. It serves as a practical example for setting up a CI/CD pipeline for Java projects.
+
+
+```
+
+# Terraform Learn
+
+This repository is a collection of Terraform configuration examples and exercises designed to help you learn and practice Infrastructure as Code (IaC) using [Terraform](https://www.terraform.io/). It is intended for beginners and intermediate users who want hands-on experience with Terraform concepts, modules, and workflows.
 
 ## Features
 
-- Sample Java application with Maven build system
-- Example unit tests
-- Jenkins pipeline configuration for automated build and test
-- Demonstrates best practices for CI/CD with Java and Jenkins
+- Example Terraform configurations for various cloud providers (e.g., AWS, Azure, GCP)
+- Step-by-step exercises to reinforce learning
+- Modular and reusable code structure
+- Best practices for writing and organizing Terraform code
+
+## Prerequisites
+
+- [Terraform](https://www.terraform.io/downloads.html) (version 0.12 or higher recommended)
+- An account with your chosen cloud provider (e.g., AWS, Azure, GCP)
+- [Git](https://git-scm.com/)
+- Basic command-line knowledge
 
 ## Getting Started
 
-### Prerequisites
+1. **Clone the Repository**
 
-- Java JDK 8 or higher
-- Maven 3.x
-- (Optional) Docker (for Jenkins setup)
-- Git
+   ```bash
+   git clone https://github.com/glenleach/terraform-learn.git
+   cd terraform-learn
+   ```
 
-### Cloning the Repository
+2. **Initialize Terraform**
 
-```bash
-git clone https://github.com/glenleach/jenkins-java-maven-app.git
-cd jenkins-java-maven-app
-```
+   Navigate to the example or module you want to try, then run:
 
-### Building the Application
+   ```bash
+   terraform init
+   ```
 
-To build the application and run tests locally:
+3. **Customize Variables**
 
-```bash
-mvn clean install
-```
+   Edit the `variables.tf` or create a `terraform.tfvars` file to set your own values.
 
-### Running the Application
+4. **Plan and Apply**
 
-You can run the application using:
+   ```bash
+   terraform plan
+   terraform apply
+   ```
 
-```bash
-mvn exec:java -Dexec.mainClass="com.mycompany.app.App"
-```
+   *Review the planned actions and confirm to provision the infrastructure.*
 
-*(Replace `com.mycompany.app.App` with the actual main class if different.)*
+5. **Destroy Resources**
 
-## Jenkins Integration
+   When finished, clean up your resources:
 
-This project is intended to be used with Jenkins for CI/CD. The repository includes a sample `Jenkinsfile` that defines the pipeline steps:
+   ```bash
+   terraform destroy
+   ```
 
-- Checkout code
-- Build with Maven
-- Run unit tests
-- Archive build artifacts
-
-### Setting Up Jenkins
-
-1. Install Jenkins (locally or using Docker).
-2. Install the required plugins (e.g., Maven Integration, Git).
-3. Create a new Pipeline job and point it to this repository.
-4. Jenkins will automatically detect the `Jenkinsfile` and execute the pipeline.
-
-#### Example: Running Jenkins with Docker
-
-```bash
-docker run -p 8080:8080 -p 50000:50000 jenkins/jenkins:lts
-```
-
-## Project Structure
+## Repository Structure
 
 ```
-jenkins-java-maven-app/
-├── src/
-│   ├── main/
-│   │   └── java/
-│   │       └── com/
-│   │           └── mycompany/
-│   │               └── app/
-│   │                   └── App.java
-│   └── test/
-│       └── java/
-│           └── com/
-│               └── mycompany/
-│                   └── app/
-│                       └── AppTest.java
-├── pom.xml
-├── Jenkinsfile
-└── README.md
+terraform-learn/
+├── aws/
+│   ├── basic-instance/
+│   ├── vpc/
+│   └── ...
+├── azure/
+│   └── ...
+├── gcp/
+│   └── ...
+├── modules/
+│   └── ...
+├── examples/
+│   └── ...
+├── README.md
+└── ...
 ```
 
-## References
+- **aws/**, **azure/**, **gcp/**: Provider-specific examples and exercises
+- **modules/**: Reusable Terraform modules
+- **examples/**: General-purpose or cross-provider examples
 
-- [Jenkins Documentation](https://www.jenkins.io/doc/)
-- [Maven Documentation](https://maven.apache.org/guides/)
-- [Sample Repo on GitHub](https://github.com/glenleach/jenkins-java-maven-app)
+## Learning Resources
 
-```
+- [Terraform Official Documentation](https://www.terraform.io/docs/)
+- [Terraform Getting Started Guide](https://learn.hashicorp.com/terraform)
+- [Terraform Registry](https://registry.terraform.io/)
+
+
 
