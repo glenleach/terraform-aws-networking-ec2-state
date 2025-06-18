@@ -1,93 +1,113 @@
 
 
+  # Terraform Automation Example – DevOps Bootcamp
 
-```
+This repository contains a simple Terraform configuration used in the [TechWorld with Nana DevOps Bootcamp](https://gitlab.com/twn-devops-bootcamp/latest/14-automation-with-python/terraform). It demonstrates how to provision AWS infrastructure using Terraform, and is designed to be used alongside automation scripts (e.g., with Python and the AWS CLI).
 
-# Terraform Learn
+---
 
-This repository is a collection of Terraform configuration examples and exercises designed to help you learn and practice Infrastructure as Code (IaC) using [Terraform](https://www.terraform.io/). It is intended for beginners and intermediate users who want hands-on experience with Terraform concepts, modules, and workflows.
+## Overview
 
-## Features
+The provided Terraform code provisions the following AWS resources:
 
-- Example Terraform configurations for various cloud providers (e.g., AWS, Azure, GCP)
-- Step-by-step exercises to reinforce learning
-- Modular and reusable code structure
-- Best practices for writing and organizing Terraform code
+- An **S3 bucket** for storing files or state.
+- An **EC2 instance** with a security group allowing SSH access.
+- An **IAM user** with programmatic access and an attached policy for S3 and EC2 management.
+
+This setup is ideal for learning infrastructure automation and integrating Terraform with Python scripts.
+
+---
 
 ## Prerequisites
 
-- [Terraform](https://www.terraform.io/downloads.html) (version 0.12 or higher recommended)
-- An account with your chosen cloud provider (e.g., AWS, Azure, GCP)
-- [Git](https://git-scm.com/)
-- Basic command-line knowledge
+- [Terraform](https://www.terraform.io/downloads.html) v0.12 or higher
+- [AWS CLI](https://aws.amazon.com/cli/) configured with appropriate credentials
+- An AWS account with permissions to create S3, EC2, and IAM resources
 
-## Getting Started
+---
 
-1. **Clone the Repository**
+
+---
+
+## Usage
+
+1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/glenleach/terraform-learn.git
-   cd terraform-learn
+   git clone <your-repo-url>
+   cd <repo-directory>
    ```
 
-2. **Initialize Terraform**
-
-   Navigate to the example or module you want to try, then run:
+2. **Initialize Terraform:**
 
    ```bash
    terraform init
    ```
 
-3. **Customize Variables**
+3. **Review and customize variables:**
 
-   Edit the `variables.tf` or create a `terraform.tfvars` file to set your own values.
+   Edit the `main.tf` file to change resource names, regions, or other parameters as needed.
 
-4. **Plan and Apply**
+4. **Plan the deployment:**
 
    ```bash
    terraform plan
+   ```
+
+5. **Apply the configuration:**
+
+   ```bash
    terraform apply
    ```
 
-   *Review the planned actions and confirm to provision the infrastructure.*
+   Confirm the action when prompted.
 
-5. **Destroy Resources**
-
-   When finished, clean up your resources:
+6. **Destroy resources when finished:**
 
    ```bash
    terraform destroy
    ```
 
-## Repository Structure
+---
+
+
+## Example Resources Created
+
+- **S3 Bucket:**  
+  Used for storing files or Terraform state.
+
+- **EC2 Instance:**  
+  A basic instance with SSH access enabled via a security group.
+
+- **IAM User:**  
+  Created for automation purposes, with access keys and permissions for S3 and EC2.
+
+---
+
+## Directory Structure
 
 ```
-terraform-learn/
-├── aws/
-│   ├── basic-instance/
-│   ├── vpc/
-│   └── ...
-├── azure/
-│   └── ...
-├── gcp/
-│   └── ...
-├── modules/
-│   └── ...
-├── examples/
-│   └── ...
-├── README.md
-└── ...
+.
+├── main.tf
+└── README.md
+└── providers.tf
+
 ```
 
-- **aws/**, **azure/**, **gcp/**: Provider-specific examples and exercises
-- **modules/**: Reusable Terraform modules
-- **examples/**: General-purpose or cross-provider examples
+---
 
-## Learning Resources
+## Notes
 
-- [Terraform Official Documentation](https://www.terraform.io/docs/)
-- [Terraform Getting Started Guide](https://learn.hashicorp.com/terraform)
-- [Terraform Registry](https://registry.terraform.io/)
+- This example is for educational and demonstration purposes. **Do not use in production without reviewing and securing resources.**
+- Resource creation may incur AWS charges. Remember to destroy resources when no longer needed.
+- For automation with Python, you can use the generated IAM user's credentials in your scripts.
 
+---
 
+## References
 
+- [Terraform AWS Provider Documentation](https://registry.terraform.io/providers/hashicorp/aws/latest/docs)
+- [AWS CLI Documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html)
+- [TechWorld with Nana DevOps Bootcamp](https://www.techworld-with-nana.com/devops-bootcamp)
+
+```
