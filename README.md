@@ -118,7 +118,7 @@ public_subnet_cidr_blocks  = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
 terraform-learn/
 ├── eks-cluster.tf
 ├── providers.tf
-├──terraform.tfvars
+├── terraform.tfvars
 ├── vpc.tf
 ├── README.md
 └── (other supporting files)
