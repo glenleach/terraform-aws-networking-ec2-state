@@ -27,35 +27,32 @@ This repository provides a modular and extensible Terraform configuration for de
 
 ---
 
-## Required Files to Create the EKS Cluster
+### Required Files for EKS Deployment
 
-To successfully deploy an EKS cluster, you should have the following files in your project:
+To successfully deploy an EKS cluster, ensure your project contains the following files:
 
-- **main.tf**: Orchestrates the overall infrastructure and references modules/resources.
-- **variables.tf**: Defines all required and optional input variables.
-- **vpc.tf**: Contains the VPC, subnet, and related networking resources.
-- **eks.tf**: Defines the EKS cluster, node groups, and related IAM roles.
-- **kms.tf** (optional): Manages KMS keys for encryption if required.
-- **terraform.tfvars**: Provides values for the variables defined in `variables.tf`. This file is user-specific and should not be committed to version control.
-- **outputs.tf**: Exposes useful information after deployment (e.g., cluster endpoint, kubeconfig, etc).
+- **eks-cluster.tf**  
+  Orchestrates the overall infrastructure and references modules/resources.
+
+- **providers.tf**  
+  Defines all required and optional providers.
+
+- **vpc.tf**  
+  Contains the VPC, subnet, and related networking resources.
+
+- **terraform.tfvars**  
+  Provides values for the variables defined in `variables.tf`.  
+  _Note: This file is user-specific and should **not** be committed to version control._
+
+- **variables.tf**  
+  Defines the input variables used throughout the configuration.
+
 
 **Note:**  
 You may also need provider configuration (commonly in `providers.tf`) and backend configuration for remote state (e.g., `backend.tf`).
 
 ---
-
-## Example `terraform.tfvars`
-
-Below is an example of a `terraform.tfvars` file you can use as a starting point. Adjust the values to fit your environment:
-
-```hcl
-# VPC and Subnets
-vpc_cidr_block         = "10.0.0.0/16"
-public_subnet_cidr     = ["10.0.1.0/24", "10.0.2.0/24"]
-private_subnet_cidr    = ["10.0.3.0/24", "10.0.4.0/24"]
-
-
-## Usage
+### Installation
 
 1. **Clone the repository and navigate to the EKS example:**
 
@@ -72,15 +69,26 @@ private_subnet_cidr    = ["10.0.3.0/24", "10.0.4.0/24"]
 
 3. **Review and customize variables:**
 
-   Edit `variables.tf` or create a `terraform.tfvars` file to override default values (e.g., region, cluster name, node group settings).
+   Edit or create a `terraform.tfvars` file to override default values. For example:
 
-4. **Plan the deployment:**
+```hcl
+vpc_cidr_block            = "10.0.0.0/16"
+private_subnet_cidr_blocks = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+public_subnet_cidr_blocks  = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
+```
+1. **Set the AWS region in your `vpc.tf` file.**  
+   For example:
+
+   ```hcl
+   region = "eu-west-1"
+
+2. **Plan the deployment:**
 
    ```bash
    terraform plan
    ```
 
-5. **Apply the configuration:**
+3. **Apply the configuration:**
 
    ```bash
    terraform apply
@@ -88,7 +96,7 @@ private_subnet_cidr    = ["10.0.3.0/24", "10.0.4.0/24"]
 
    Confirm the action when prompted.
 
-6. **Configure kubectl (optional):**
+4. **Configure kubectl (optional):**
 
    After the cluster is created, you can update your kubeconfig to access the cluster:
 
@@ -98,7 +106,7 @@ private_subnet_cidr    = ["10.0.3.0/24", "10.0.4.0/24"]
 
    Replace `<region>` and `<cluster_name>` with the output values from Terraform.
 
-7. **Destroy the resources when finished:**
+5. **Destroy the resources when finished:**
 
    ```bash
    terraform destroy
@@ -107,11 +115,11 @@ private_subnet_cidr    = ["10.0.3.0/24", "10.0.4.0/24"]
 ## Directory Structure
 
 ```
-eks/
-├── main.tf
-├── variables.tf
-├── outputs.tf
-├── versions.tf
+terraform-learn/
+├── eks-cluster.tf
+├── providers.tf
+├──terraform.tfvars
+├── vpc.tf
 ├── README.md
 └── (other supporting files)
 ```
