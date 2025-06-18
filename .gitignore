@@ -10,3 +10,6 @@
 
 # .ds_store file
 .ds_store
+
+.qodo
+.gitignore
