@@ -1,11 +1,14 @@
-
+# Demo App – DevOps Bootcamp Training (TechWorld with Nana)
+This repository is part of the DevOps Bootcamp from TechWorld with Nana.
 
 
 ```
 
-# EKS Example
+# EKS Terraform Project
 
-This directory contains a Terraform configuration example for provisioning an [Amazon Elastic Kubernetes Service (EKS)](https://aws.amazon.com/eks/) cluster on AWS. The example demonstrates how to use Terraform to automate the creation of a production-ready Kubernetes cluster, including supporting resources such as VPC, subnets, node groups, and IAM roles.
+This repository provides a modular and extensible Terraform configuration for deploying an Amazon EKS (Elastic Kubernetes Service) cluster on AWS. It includes all necessary infrastructure components such as VPC, subnets, IAM roles, and optional KMS encryption.
+
+---
 
 ## Features
 
@@ -20,6 +23,36 @@ This directory contains a Terraform configuration example for provisioning an [A
 - [AWS CLI](https://aws.amazon.com/cli/) configured with appropriate credentials
 - AWS account with permissions to create EKS, VPC, IAM, and related resources
 - [kubectl](https://kubernetes.io/docs/tasks/tools/) (optional, for cluster access)
+
+---
+
+## Required Files to Create the EKS Cluster
+
+To successfully deploy an EKS cluster, you should have the following files in your project:
+
+- **main.tf**: Orchestrates the overall infrastructure and references modules/resources.
+- **variables.tf**: Defines all required and optional input variables.
+- **vpc.tf**: Contains the VPC, subnet, and related networking resources.
+- **eks.tf**: Defines the EKS cluster, node groups, and related IAM roles.
+- **kms.tf** (optional): Manages KMS keys for encryption if required.
+- **terraform.tfvars**: Provides values for the variables defined in `variables.tf`. This file is user-specific and should not be committed to version control.
+- **outputs.tf**: Exposes useful information after deployment (e.g., cluster endpoint, kubeconfig, etc).
+
+**Note:**  
+You may also need provider configuration (commonly in `providers.tf`) and backend configuration for remote state (e.g., `backend.tf`).
+
+---
+
+## Example `terraform.tfvars`
+
+Below is an example of a `terraform.tfvars` file you can use as a starting point. Adjust the values to fit your environment:
+
+```hcl
+# VPC and Subnets
+vpc_cidr_block         = "10.0.0.0/16"
+public_subnet_cidr     = ["10.0.1.0/24", "10.0.2.0/24"]
+private_subnet_cidr    = ["10.0.3.0/24", "10.0.4.0/24"]
+
 
 ## Usage
 
