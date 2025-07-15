@@ -28,15 +28,15 @@ resource "random_id" "bucket_suffix" {
 
 resource "aws_security_group" "ec2_sg" {
   name        = "allow_ssh"
-  description = "Allow SSH inbound traffic"
+  description = "Allow SSH inbound traffic (open to all, demo only)"
   vpc_id      = aws_vpc.myapp-vpc.id
 
   ingress {
-    description = "SSH"
+    description = "SSH (open to all, not recommended for production)"
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] # Use cautiously for demo purposes
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
@@ -51,6 +51,31 @@ resource "aws_security_group" "ec2_sg" {
   }
 }
 
+resource "aws_security_group" "ssh_from_my_ip" {
+  name        = "allow_ssh_from_my_ip"
+  description = "Allow SSH inbound traffic from my public IP only"
+  vpc_id      = aws_vpc.myapp-vpc.id
+
+  ingress {
+    description = "SSH from my public IP"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = [var.allowed_ssh_ip]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "EC2_SSH_MYIP_SG"
+  }
+}
+
 #########################
 # 3. EC2 Instance
 #########################
@@ -59,7 +84,7 @@ resource "aws_instance" "devops_instance" {
   ami                    = "ami-0c02fb55956c7d316" # Amazon Linux 2 AMI in us-east-1
   instance_type          = "t2.micro"
   subnet_id              = aws_subnet.myapp-subnet-1.id
-  vpc_security_group_ids = [aws_security_group.ec2_sg.id]
+  vpc_security_group_ids = [aws_security_group.ssh_from_my_ip.id]
   key_name               = var.key_pair_name
 
   tags = {

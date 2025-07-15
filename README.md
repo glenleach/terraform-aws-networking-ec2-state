@@ -89,6 +89,7 @@ cidr_blocks = [
 
 avail_zone    = "us-east-1a"
 key_pair_name = "your-ec2-keypair-name"
+allowed_ssh_ip = "203.0.113.0/32" # Replace with your public IP in CIDR notation
 ```
 
 ---

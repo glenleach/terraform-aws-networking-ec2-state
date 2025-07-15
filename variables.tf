@@ -14,3 +14,8 @@ variable "key_pair_name" {
   type        = string
 }
 
+variable "allowed_ssh_ip" {
+  description = "The IP address (in CIDR notation) allowed to SSH into EC2."
+  type        = string
+}
+
