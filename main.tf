@@ -1,25 +1,51 @@
 # main.tf
 
-provider "aws" {
-  region = "us-east-1" # You can change this as needed
-}
-
 #########################
-# 1. S3 Bucket
+# 0. VPC and Subnet
 #########################
 
-resource "aws_s3_bucket" "state_bucket" {
-  bucket = "devops-bootcamp-tf-state-${random_id.bucket_suffix.hex}"
-  acl    = "private"
-
+resource "aws_vpc" "my-vpc" {
+  cidr_block = var.cidr_blocks[0].cidr_block
   tags = {
-    Name        = "Terraform State Bucket"
-    Environment = "DevOps-Bootcamp"
+    Name = var.cidr_blocks[0].name
   }
 }
 
-resource "random_id" "bucket_suffix" {
-  byte_length = 4
+resource "aws_subnet" "my-subnet-1" {
+  vpc_id            = aws_vpc.my-vpc.id
+  cidr_block        = var.cidr_blocks[1].cidr_block
+  availability_zone = var.avail_zone
+  map_public_ip_on_launch = true
+  tags = {
+    Name = var.cidr_blocks[1].name
+  }
+}
+
+#########################
+# 1. Internet Gateway and Public Route Table
+#########################
+
+resource "aws_internet_gateway" "my_igw" {
+  vpc_id = aws_vpc.my-vpc.id
+  tags = {
+    Name = "MyApp-IGW"
+  }
+}
+
+resource "aws_route_table" "public_rt" {
+  vpc_id = aws_vpc.my-vpc.id
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.my_igw.id
+  }
+  tags = {
+    Name = "MyApp-Public-RT"
+  }
+}
+
+resource "aws_route_table_association" "public_assoc" {
+  subnet_id      = aws_subnet.my-subnet-1.id
+  route_table_id = aws_route_table.public_rt.id
 }
 
 #########################
@@ -29,15 +55,7 @@ resource "random_id" "bucket_suffix" {
 resource "aws_security_group" "ec2_sg" {
   name        = "allow_ssh"
   description = "Allow SSH inbound traffic (open to all, demo only)"
-  vpc_id      = aws_vpc.myapp-vpc.id
-
-  ingress {
-    description = "SSH (open to all, not recommended for production)"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+  vpc_id      = aws_vpc.my-vpc.id
 
   egress {
     from_port   = 0
@@ -54,7 +72,7 @@ resource "aws_security_group" "ec2_sg" {
 resource "aws_security_group" "ssh_from_my_ip" {
   name        = "allow_ssh_from_my_ip"
   description = "Allow SSH inbound traffic from my public IP only"
-  vpc_id      = aws_vpc.myapp-vpc.id
+  vpc_id      = aws_vpc.my-vpc.id
 
   ingress {
     description = "SSH from my public IP"
@@ -80,12 +98,27 @@ resource "aws_security_group" "ssh_from_my_ip" {
 # 3. EC2 Instance
 #########################
 
+data "aws_ami" "amazon_linux_2" {
+  most_recent = true
+  owners      = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
+  }
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+}
+
 resource "aws_instance" "devops_instance" {
-  ami                    = "ami-0c02fb55956c7d316" # Amazon Linux 2 AMI in us-east-1
+  ami                    = data.aws_ami.amazon_linux_2.id
   instance_type          = "t2.micro"
-  subnet_id              = aws_subnet.myapp-subnet-1.id
+  subnet_id              = aws_subnet.my-subnet-1.id
   vpc_security_group_ids = [aws_security_group.ssh_from_my_ip.id]
   key_name               = var.key_pair_name
+  associate_public_ip_address = true
 
   tags = {
     Name = "DevOps Bootcamp EC2"

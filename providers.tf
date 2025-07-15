@@ -1,11 +1,12 @@
 provider "aws" {
-  region = "us-east-1"
+  region = "eu-west-2"
 }
 
+# NOTE: Backend blocks do not support variable interpolation. Ensure the bucket name matches your state_bucket_name variable in terraform.tfvars.
 terraform {
   backend "s3" {
-    bucket = "devops-bootcamp-tf-state-xxxxxx" # Replace with your actual bucket name after apply
+    bucket = "terrafom-backup-state-glenleach1974" # Must match var.state_bucket_name
     key    = "terraform.tfstate"
-    region = "us-east-1"
+    region = "eu-west-2"
   }
 }

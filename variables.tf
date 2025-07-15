@@ -19,3 +19,8 @@ variable "allowed_ssh_ip" {
   type        = string
 }
 
+variable "state_bucket_name" {
+  description = "The name of the S3 bucket to use for Terraform state. Must be globally unique."
+  type        = string
+}
+

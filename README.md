@@ -87,14 +87,38 @@ cidr_blocks = [
   }
 ]
 
-avail_zone    = "us-east-1a"
-key_pair_name = "your-ec2-keypair-name"
+avail_zone    = "eu-west-2a" # Replace with your regions availability zone
+key_pair_name = "your-ec2-keypair-name"  # Replace with your keypair name
 allowed_ssh_ip = "203.0.113.0/32" # Replace with your public IP in CIDR notation
 ```
 
 ---
 
+## ☁️ Remote State Setup (S3 Bucket)
+
+**Before running Terraform for the first time:**
+
+1. **Manually create an S3 bucket** in the AWS Console for remote state storage.
+   - The bucket name must match the value of `state_bucket_name` in your `terraform.tfvars` (e.g., `terrafom-backup-state-123456789`).
+   - The bucket must be in the same region as your provider (e.g., `eu-west-2`).
+   - Do NOT define the S3 bucket as a Terraform resource in this project.
+
+2. **Configure the backend** in `providers.tf` to use this bucket:
+   ```hcl
+   terraform {
+     backend "s3" {
+       bucket = "terrafom-backup-state-johnsmith-2025"
+       key    = "terraform.tfstate"
+       region = "eu-west-2"
+     }
+   }
+   ```
+
+---
+
 ## 🛠️ Usage Steps
+
+### First-Time Setup
 
 1. **Clone the Repository**
 
@@ -111,47 +135,37 @@ allowed_ssh_ip = "203.0.113.0/32" # Replace with your public IP in CIDR notation
 
    Follow the instructions in the **Creating and Using an EC2 Key Pair** section above.
 
-4. **Initialize Terraform (First Time - S3 Bucket Not Yet Created)**
-
-   ```sh
-   terraform init
-   terraform apply
-   ```
-
-   > 🪣 This initial run creates the S3 bucket used for the remote backend.
-
-5. **Update Backend in `providers.tf`**
-
-   After the bucket is created, update your `providers.tf` like this:
-
-   ```hcl
-   terraform {
-     backend "s3" {
-       bucket = "devops-bootcamp-tf-state-<your-bucket-id>" # Use the name from Terraform output
-       key    = "terraform.tfstate"
-       region = "us-east-1"
-     }
-   }
-   ```
-
-   Then re-initialize with:
+4. **Initialize Terraform and Connect to S3 Backend**
 
    ```sh
    terraform init -reconfigure
    ```
+   - The `-reconfigure` flag is required the first time you set up the project, or any time you change the backend configuration. It ensures Terraform fully reinitializes the backend and connects to your S3 bucket for remote state.
 
-6. **Plan and Apply**
+5. **Apply Infrastructure**
 
    ```sh
-   terraform plan
    terraform apply
    ```
 
-7. **Destroy Resources When Finished**
+### Subsequent Runs
 
-   ```sh
-   terraform destroy
-   ```
+- For future changes, simply run:
+  ```sh
+  terraform init
+  terraform plan
+  terraform apply
+  ```
+- The `-reconfigure` flag is only needed if you change the backend configuration again. Otherwise, a normal `terraform init` is sufficient.
+- Terraform will use the remote state in S3 automatically.
+
+### Destroying Infrastructure
+
+- To destroy all resources, run:
+  ```sh
+  terraform destroy
+  ```
+- The S3 bucket for state is NOT managed by Terraform and must be deleted manually if no longer needed.
 
 ---
 
