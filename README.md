@@ -30,6 +30,36 @@ This setup is ideal for learning infrastructure automation and integrating Terra
 
 ---
 
+## 🔑 Creating and Using an EC2 Key Pair
+
+To SSH into your EC2 instance, you must have an EC2 key pair created in your AWS account and the private key file (.pem) downloaded and stored securely on your local machine.
+
+### 1. Create a Key Pair (AWS Console)
+- Go to the EC2 Dashboard in the AWS Console.
+- In the left menu, click **Key Pairs** under **Network & Security**.
+- Click **Create key pair**.
+- Enter a name (e.g., `your-ec2-keypair-name`).
+- Choose **RSA** for key type and **.pem** for file format.
+- Click **Create key pair**. The `.pem` file will be downloaded automatically.
+- Move the `.pem` file to a secure location on your computer (e.g., `~/.ssh/`).
+
+### 2. Reference the Key Pair in Terraform
+- Set the `key_pair_name` variable in your `terraform.tfvars` to the name you used above.
+
+### 3. SSH into Your EC2 Instance
+- After applying Terraform, get the public IP of your EC2 instance from the AWS Console or Terraform output.
+- Run the following command (replace values as needed):
+
+  ```sh
+  ssh -i /path/to/your-ec2-keypair-name.pem ec2-user@<ec2-public-ip>
+  ```
+- Ensure the `.pem` file has correct permissions:
+  ```sh
+  chmod 400 /path/to/your-ec2-keypair-name.pem
+  ```
+
+---
+
 ## 📂 Directory Structure
 
 ```
@@ -76,7 +106,11 @@ key_pair_name = "your-ec2-keypair-name"
 
    Create and fill in the file as shown above.
 
-3. **Initialize Terraform (First Time - S3 Bucket Not Yet Created)**
+3. **Create an EC2 Key Pair**
+
+   Follow the instructions in the **Creating and Using an EC2 Key Pair** section above.
+
+4. **Initialize Terraform (First Time - S3 Bucket Not Yet Created)**
 
    ```sh
    terraform init
@@ -85,7 +119,7 @@ key_pair_name = "your-ec2-keypair-name"
 
    > 🪣 This initial run creates the S3 bucket used for the remote backend.
 
-4. **Update Backend in `providers.tf`**
+5. **Update Backend in `providers.tf`**
 
    After the bucket is created, update your `providers.tf` like this:
 
@@ -105,14 +139,14 @@ key_pair_name = "your-ec2-keypair-name"
    terraform init -reconfigure
    ```
 
-5. **Plan and Apply**
+6. **Plan and Apply**
 
    ```sh
    terraform plan
    terraform apply
    ```
 
-6. **Destroy Resources When Finished**
+7. **Destroy Resources When Finished**
 
    ```sh
    terraform destroy
