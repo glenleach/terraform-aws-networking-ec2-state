@@ -63,6 +63,9 @@ key_pair_name = "your-existing-keypair-name"
 
     💡 Replace "your-existing-keypair-name" with your actual EC2 key pair name.
 
+
+---
+
 🛠️ Usage Steps
 1. Clone the Repository
 
@@ -104,6 +107,10 @@ terraform apply
 
 terraform destroy
 
+
+---
+
+
 📘 Example Resources Created
 
     S3 Bucket: Stores Terraform state or files
@@ -114,6 +121,9 @@ terraform destroy
 
     VPC/Subnet: Basic networking setup with user-defined CIDR blocks
 
+
+---
+
 ⚠️ Notes
 
     This example is intended for educational purposes only. Do not use in production without reviewing all settings and securing sensitive data.
@@ -122,6 +132,9 @@ terraform destroy
 
     For automation with Python, use the access keys from the created IAM user.
 
+
+---
+
 📚 References
 
     Terraform AWS Provider Documentation
@@ -129,6 +142,8 @@ terraform destroy
     AWS CLI Documentation
 
     TechWorld with Nana – DevOps Bootcamp
+
+---
 
 📄 License
 
