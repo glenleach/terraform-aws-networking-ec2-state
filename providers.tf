@@ -1,8 +1,11 @@
+provider "aws" {
+  region = "us-east-1"
+}
+
 terraform {
-  required_providers {
-    aws = {
-      source = "hashicorp/aws"
-      version = "5.20.1"
-    }
+  backend "s3" {
+    bucket = "devops-bootcamp-tf-state-xxxxxx" # Replace with your actual bucket name after apply
+    key    = "terraform.tfstate"
+    region = "us-east-1"
   }
 }
