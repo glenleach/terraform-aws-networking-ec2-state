@@ -32,16 +32,14 @@ This setup is ideal for learning infrastructure automation and integrating Terra
 
 ## 📂 Directory Structure
 
+```
 .
-├── main.tf # Main infrastructure configuration
-├── providers.tf # AWS provider and backend config
-├── variables.tf # Variable declarations
-├── terraform.tfvars # Input values (you create this)
-└── README.md # Documentation
-
-
----
-
+├── main.tf            # Main infrastructure configuration
+├── providers.tf       # AWS provider and backend config
+├── variables.tf       # Variable declarations
+├── terraform.tfvars   # Input values (you create this)
+└── README.md          # Documentation
+```
 
 ---
 
@@ -61,90 +59,93 @@ cidr_blocks = [
 
 avail_zone    = "us-east-1a"
 key_pair_name = "your-ec2-keypair-name"
-
-
----
-
-🛠️ Usage Steps
-1. Clone the Repository
-
-git clone <your-repo-url>
-cd <repo-directory>
-
-2. Set Up Your terraform.tfvars File
-
-Create and fill in the file as shown above.
-3. Initialize Terraform (First Time - S3 Bucket Not Yet Created)
-
-terraform init
-terraform apply
-
-    🪣 This initial run creates the S3 bucket used for the remote backend.
-
-4. Update Backend in providers.tf
-
-After the bucket is created, update your providers.tf like this:
-
-terraform {
-  backend "s3" {
-    bucket = "devops-bootcamp-tf-state-<your-bucket-id>" # Use the name from Terraform output
-    key    = "terraform.tfstate"
-    region = "us-east-1"
-  }
-}
-
-Then re-initialize with:
-
-terraform init -reconfigure
-
-5. Plan and Apply
-
-terraform plan
-terraform apply
-
-6. Destroy Resources When Finished
-
-terraform destroy
-
+```
 
 ---
 
+## 🛠️ Usage Steps
 
-📘 Example Resources Created
+1. **Clone the Repository**
 
-    S3 Bucket: Stores Terraform state or files
+   ```sh
+   git clone <your-repo-url>
+   cd <repo-directory>
+   ```
 
-    EC2 Instance: Amazon Linux 2 with SSH access
+2. **Set Up Your `terraform.tfvars` File**
 
-    IAM User: Programmatic access to EC2 and S3
+   Create and fill in the file as shown above.
 
-    VPC/Subnet: Basic networking setup with user-defined CIDR blocks
+3. **Initialize Terraform (First Time - S3 Bucket Not Yet Created)**
 
+   ```sh
+   terraform init
+   terraform apply
+   ```
+
+   > 🪣 This initial run creates the S3 bucket used for the remote backend.
+
+4. **Update Backend in `providers.tf`**
+
+   After the bucket is created, update your `providers.tf` like this:
+
+   ```hcl
+   terraform {
+     backend "s3" {
+       bucket = "devops-bootcamp-tf-state-<your-bucket-id>" # Use the name from Terraform output
+       key    = "terraform.tfstate"
+       region = "us-east-1"
+     }
+   }
+   ```
+
+   Then re-initialize with:
+
+   ```sh
+   terraform init -reconfigure
+   ```
+
+5. **Plan and Apply**
+
+   ```sh
+   terraform plan
+   terraform apply
+   ```
+
+6. **Destroy Resources When Finished**
+
+   ```sh
+   terraform destroy
+   ```
 
 ---
 
-⚠️ Notes
+## 📘 Example Resources Created
 
-    This example is intended for educational purposes only. Do not use in production without reviewing all settings and securing sensitive data.
-
-    Resource creation may incur AWS charges. Be sure to destroy all resources when you're done.
-
-    For automation with Python, use the access keys from the created IAM user.
-
+- **S3 Bucket:** Stores Terraform state or files
+- **EC2 Instance:** Amazon Linux 2 with SSH access
+- **IAM User:** Programmatic access to EC2 and S3
+- **VPC/Subnet:** Basic networking setup with user-defined CIDR blocks
 
 ---
 
-📚 References
+## ⚠️ Notes
 
-    Terraform AWS Provider Documentation
-
-    AWS CLI Documentation
-
-    TechWorld with Nana – DevOps Bootcamp
+- This example is intended for educational purposes only. Do not use in production without reviewing all settings and securing sensitive data.
+- Resource creation may incur AWS charges. Be sure to destroy all resources when you're done.
+- For automation with Python, use the access keys from the created IAM user.
 
 ---
 
-📄 License
+## 📚 References
+
+- [Terraform AWS Provider Documentation](https://registry.terraform.io/providers/hashicorp/aws/latest/docs)
+- [AWS CLI Documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html)
+- TechWorld with Nana – DevOps Bootcamp
+
+---
+
+## 📄 License
 
 © TechWorld with Nana. All rights reserved.
 
