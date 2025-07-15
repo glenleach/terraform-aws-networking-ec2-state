@@ -42,9 +42,10 @@ This setup is ideal for learning infrastructure automation and integrating Terra
 
 ---
 
-## 🔧 Example `terraform.tfvars`
 
-Create a file named `terraform.tfvars` in the root directory with the following content:
+---
+
+## 🔧 Example `terraform.tfvars`
 
 ```hcl
 cidr_blocks = [
@@ -59,9 +60,7 @@ cidr_blocks = [
 ]
 
 avail_zone    = "us-east-1a"
-key_pair_name = "your-existing-keypair-name"
-
-    💡 Replace "your-existing-keypair-name" with your actual EC2 key pair name.
+key_pair_name = "your-ec2-keypair-name"
 
 
 ---
