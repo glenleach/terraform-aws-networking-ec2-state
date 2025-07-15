@@ -1,120 +1,137 @@
+# Terraform Automation Example – DevOps Bootcamp
 
-
-  # Terraform Automation Example – DevOps Bootcamp
-
-This repository contains a simple Terraform configuration used in the [TechWorld with Nana DevOps Bootcamp](https://gitlab.com/twn-devops-bootcamp/latest/14-automation-with-python/terraform). It demonstrates how to provision AWS infrastructure using Terraform, and is designed to be used alongside automation scripts (e.g., with Python and the AWS CLI).
+This repository contains a simple Terraform configuration used in the **TechWorld with Nana DevOps Bootcamp**. It demonstrates how to provision AWS infrastructure using Terraform and is designed to integrate with automation scripts (e.g., Python and the AWS CLI).
 
 ---
 
-## Overview
+## 🚀 Overview
 
 The provided Terraform code provisions the following AWS resources:
 
-- An **S3 bucket** for storing files or state.
-- An **EC2 instance** with a security group allowing SSH access.
-- An **IAM user** with programmatic access and an attached policy for S3 and EC2 management.
+- **S3 Bucket** for storing files or the Terraform remote state
+- **EC2 Instance** with a security group allowing SSH access
+- **IAM User** with programmatic access and a policy for S3 and EC2 management
+- **VPC and Subnet** with user-defined CIDR blocks and tagging
 
-This setup is ideal for learning infrastructure automation and integrating Terraform with Python scripts.
-
----
-
-## Prerequisites
-
-- [Terraform](https://www.terraform.io/downloads.html) v0.12 or higher
-- [AWS CLI](https://aws.amazon.com/cli/) configured with appropriate credentials
-- An AWS account with permissions to create S3, EC2, and IAM resources
+This setup is ideal for learning infrastructure automation and integrating Terraform with scripting.
 
 ---
 
+## ✅ Prerequisites
+
+- Terraform v0.12 or higher
+- AWS CLI installed and configured
+- AWS account with permissions to create:
+  - S3 buckets
+  - EC2 instances
+  - IAM resources
+  - VPC and subnets
+- A valid EC2 Key Pair in the selected AWS region
 
 ---
 
-## Usage
+## 📂 Directory Structure
 
-1. **Clone the repository:**
-
-   ```bash
-   git clone <your-repo-url>
-   cd <repo-directory>
-   ```
-
-2. **Initialize Terraform:**
-
-   ```bash
-   terraform init
-   ```
-
-3. **Review and customize variables:**
-
-   Edit the `main.tf` file to change resource names, regions, or other parameters as needed.
-
-4. **Plan the deployment:**
-
-   ```bash
-   terraform plan
-   ```
-
-5. **Apply the configuration:**
-
-   ```bash
-   terraform apply
-   ```
-
-   Confirm the action when prompted.
-
-6. **Destroy resources when finished:**
-
-   ```bash
-   terraform destroy
-   ```
-
----
-
-
-## Example Resources Created
-
-- **S3 Bucket:**  
-  Used for storing files or Terraform state.
-
-- **EC2 Instance:**  
-  A basic instance with SSH access enabled via a security group.
-
-- **IAM User:**  
-  Created for automation purposes, with access keys and permissions for S3 and EC2.
-
----
-
-## Directory Structure
-
-```
 .
-├── main.tf
-└── README.md
-└── providers.tf
+├── main.tf # Main infrastructure configuration
+├── providers.tf # AWS provider and backend config
+├── variables.tf # Variable declarations
+├── terraform.tfvars # Input values (you create this)
+└── README.md # Documentation
 
-```
-
----
-
-## Notes
-
-- This example is for educational and demonstration purposes. **Do not use in production without reviewing and securing resources.**
-- Resource creation may incur AWS charges. Remember to destroy resources when no longer needed.
-- For automation with Python, you can use the generated IAM user's credentials in your scripts.
 
 ---
 
-## References
+## 🔧 Example `terraform.tfvars`
 
-- [Terraform AWS Provider Documentation](https://registry.terraform.io/providers/hashicorp/aws/latest/docs)
-- [AWS CLI Documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html)
-- [TechWorld with Nana DevOps Bootcamp](https://www.techworld-with-nana.com/devops-bootcamp)
+Create a file named `terraform.tfvars` in the root directory with the following content:
 
-```
-## License
-Copyright © Techworld with Nana. All rights reserved.
+```hcl
+cidr_blocks = [
+  {
+    cidr_block = "10.0.0.0/16"
+    name       = "my-vpc"
+  },
+  {
+    cidr_block = "10.0.1.0/24"
+    name       = "my-subnet"
+  }
+]
 
-This project is provided for personal training and educational purposes only. No part of this project may be
-reproduced, distributed, or transmitted in any form or by any means, including photocopying, recording, or other
-electronic or mechanical methods, without the priorwritten permission of the copyright owner, except in the case of
-brief quotations embodied in critical reviews and certain other noncommercial uses permitted by copyright law.
+avail_zone    = "us-east-1a"
+key_pair_name = "your-existing-keypair-name"
+
+    💡 Replace "your-existing-keypair-name" with your actual EC2 key pair name.
+
+🛠️ Usage Steps
+1. Clone the Repository
+
+git clone <your-repo-url>
+cd <repo-directory>
+
+2. Set Up Your terraform.tfvars File
+
+Create and fill in the file as shown above.
+3. Initialize Terraform (First Time - S3 Bucket Not Yet Created)
+
+terraform init
+terraform apply
+
+    🪣 This initial run creates the S3 bucket used for the remote backend.
+
+4. Update Backend in providers.tf
+
+After the bucket is created, update your providers.tf like this:
+
+terraform {
+  backend "s3" {
+    bucket = "devops-bootcamp-tf-state-<your-bucket-id>" # Use the name from Terraform output
+    key    = "terraform.tfstate"
+    region = "us-east-1"
+  }
+}
+
+Then re-initialize with:
+
+terraform init -reconfigure
+
+5. Plan and Apply
+
+terraform plan
+terraform apply
+
+6. Destroy Resources When Finished
+
+terraform destroy
+
+📘 Example Resources Created
+
+    S3 Bucket: Stores Terraform state or files
+
+    EC2 Instance: Amazon Linux 2 with SSH access
+
+    IAM User: Programmatic access to EC2 and S3
+
+    VPC/Subnet: Basic networking setup with user-defined CIDR blocks
+
+⚠️ Notes
+
+    This example is intended for educational purposes only. Do not use in production without reviewing all settings and securing sensitive data.
+
+    Resource creation may incur AWS charges. Be sure to destroy all resources when you're done.
+
+    For automation with Python, use the access keys from the created IAM user.
+
+📚 References
+
+    Terraform AWS Provider Documentation
+
+    AWS CLI Documentation
+
+    TechWorld with Nana – DevOps Bootcamp
+
+📄 License
+
+© TechWorld with Nana. All rights reserved.
+
+This project is provided for personal training and educational purposes only. No part of this project may be reproduced, distributed, or transmitted in any form or by any means, including photocopying, recording, or other electronic or mechanical methods, without prior written permission of the copyright owner.
